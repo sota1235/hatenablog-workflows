@@ -17,6 +17,31 @@ git mv blogsync.yaml draft.template entries draft_entries blog/
 
 `blogsync.yaml` はリポジトリ内に1つだけ配置し、必ず Git で管理してください。見つからない場合や複数見つかった場合は、曖昧なディレクトリで処理を続行せず、workflow がエラー終了します。
 
+### 署名付きの commit を作成する
+
+workflow が作成する commit は、デフォルトでは署名されません。`sign_commits` に `true` を指定すると、GitHub API 経由で commit を作成し、GitHub によって署名された commit になります。
+
+```yaml
+jobs:
+  pull:
+    uses: hatena/hatenablog-workflows/.github/workflows/pull.yaml@v2
+    with:
+      BLOG_DOMAIN: ${{ vars.BLOG_DOMAIN }}
+      sign_commits: true
+    secrets:
+      OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
+```
+
+`sign_commits` は commit を作成する以下の workflow で指定できます。
+
+- `initialize.yaml`
+- `create-draft.yaml`
+- `pull-draft.yaml`
+- `pull.yaml`
+- `push-draft.yaml`
+- `push-published-entries.yaml`
+- `push-when-publishing-from-draft.yaml`
+
 ## Workflows
 
 ### `initialize.yaml`
