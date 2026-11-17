@@ -42,6 +42,51 @@ jobs:
 - `push-published-entries.yaml`
 - `push-when-publishing-from-draft.yaml`
 
+### GITHUB_TOKEN 以外のトークンで commit する
+
+workflow が commit や Pull Request を作成するときは、デフォルトでは `GITHUB_TOKEN` を使います。以下のいずれかを指定すると、代わりにそのトークンを使います。両方を指定した場合は GitHub App のトークンが優先されます。
+
+#### GitHub App のトークンを使う
+
+`app_id` と `APP_PRIVATE_KEY` を指定すると、workflow の中で GitHub App のトークンを発行して使います。GitHub App のトークンは有効期限が短く、呼び出し元の別の job で発行したトークンは reusable workflow に渡せないため、トークンではなく GitHub App の情報を渡してください。
+
+```yaml
+jobs:
+  pull:
+    uses: hatena/hatenablog-workflows/.github/workflows/pull.yaml@v2
+    with:
+      BLOG_DOMAIN: ${{ vars.BLOG_DOMAIN }}
+      app_id: ${{ vars.APP_ID }}
+    secrets:
+      OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+- GitHub App には、対象リポジトリの Contents と Pull requests の書き込み権限が必要です
+- `sign_commits: true` と併用すると、GitHub App として署名された commit になります
+
+#### 任意のトークンを使う
+
+Personal Access Token などの Secrets に保存したトークンは、`COMMIT_TOKEN` に指定します。
+
+```yaml
+jobs:
+  pull:
+    uses: hatena/hatenablog-workflows/.github/workflows/pull.yaml@v2
+    with:
+      BLOG_DOMAIN: ${{ vars.BLOG_DOMAIN }}
+    secrets:
+      OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
+      COMMIT_TOKEN: ${{ secrets.COMMIT_TOKEN }}
+```
+
+- トークンには、対象リポジトリの Contents と Pull requests の書き込み権限が必要です
+
+#### 共通の注意点
+
+- `GITHUB_TOKEN` と異なり、これらのトークンで作成した commit や Pull Request は他の workflow を起動します
+- 指定できる workflow は `sign_commits` と同じです
+
 ## Workflows
 
 ### `initialize.yaml`
