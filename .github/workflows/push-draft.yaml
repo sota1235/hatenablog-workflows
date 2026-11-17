@@ -7,6 +7,10 @@ on:
         required: false
         default: ubuntu-latest
         type: string
+      sign_commits:
+        required: false
+        default: false
+        type: boolean
     secrets:
       OWNER_API_KEY:
         required: true
@@ -16,6 +20,7 @@ jobs:
     uses: hatena/hatenablog-workflows/.github/workflows/upload-images.yaml@d96c1ea3914d647ff9caade1881163be9d58b915 
     with:
       runner: ${{ inputs.runner }}
+      sign_commits: ${{ inputs.sign_commits }}
     secrets:
       OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
   push-draft:

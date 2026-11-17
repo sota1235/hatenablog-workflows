@@ -13,6 +13,10 @@ on:
         required: false
         default: ubuntu-latest
         type: string
+      sign_commits:
+        required: false
+        default: false
+        type: boolean
     secrets:
       OWNER_API_KEY:
         required: true
@@ -67,3 +71,4 @@ jobs:
           labels: |
             skip-push
           delete-branch: true
+          sign-commits: ${{ inputs.sign_commits }}
