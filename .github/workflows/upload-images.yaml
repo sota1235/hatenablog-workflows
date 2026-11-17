@@ -11,9 +11,17 @@ on:
         required: false
         default: false
         type: boolean
+      app_id:
+        required: false
+        default: ""
+        type: string
     secrets:
       OWNER_API_KEY:
         required: true
+      APP_PRIVATE_KEY:
+        required: false
+      COMMIT_TOKEN:
+        required: false
     outputs:
       revision:
         value: ${{ jobs.upload-image.outputs.revision }}
@@ -24,9 +32,17 @@ jobs:
     outputs:
       revision: ${{ steps.commit-and-push.outputs.revision }}
     steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        if: inputs.app_id != ''
+        with:
+          app-id: ${{ inputs.app_id }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ steps.app-token.outputs.token || secrets.COMMIT_TOKEN || github.token }}
       - name: resolve working directory
         id: working-directory
         uses: hatena/hatenablog-workflows/.github/actions/resolve-working-directory@d96c1ea3914d647ff9caade1881163be9d58b915
@@ -110,4 +126,4 @@ jobs:
         env:
           SIGN_COMMITS: ${{ inputs.sign_commits }}
           BRANCH: ${{ github.event.pull_request.head.ref }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.COMMIT_TOKEN || github.token }}

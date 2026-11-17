@@ -11,9 +11,17 @@ on:
         required: false
         default: false
         type: boolean
+      app_id:
+        required: false
+        default: ""
+        type: string
     secrets:
       OWNER_API_KEY:
         required: true
+      APP_PRIVATE_KEY:
+        required: false
+      COMMIT_TOKEN:
+        required: false
 
 jobs:
   upload-images:
@@ -22,5 +30,8 @@ jobs:
     with:
       runner: ${{ inputs.runner }}
       sign_commits: ${{ inputs.sign_commits }}
+      app_id: ${{ inputs.app_id }}
     secrets:
       OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      COMMIT_TOKEN: ${{ secrets.COMMIT_TOKEN }}
