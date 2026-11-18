@@ -19,28 +19,11 @@ git mv blogsync.yaml draft.template entries draft_entries blog/
 
 ### 署名付きの commit を作成する
 
-workflow が作成する commit は、デフォルトでは署名されません。`sign_commits` に `true` を指定すると、GitHub API 経由で commit を作成し、GitHub によって署名された commit になります。
+workflow が作成する commit は、デフォルトでは署名されません。呼び出し元リポジトリの variable `HATENABLOG_WORKFLOWS_SIGN_COMMITS` に `true` を設定すると、GitHub API 経由で commit を作成し、GitHub によって署名された commit になります。呼び出し部分の workflow を変更する必要はありません。
 
-```yaml
-jobs:
-  pull:
-    uses: hatena/hatenablog-workflows/.github/workflows/pull.yaml@v2
-    with:
-      BLOG_DOMAIN: ${{ vars.BLOG_DOMAIN }}
-      sign_commits: true
-    secrets:
-      OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
+```console
+gh variable set HATENABLOG_WORKFLOWS_SIGN_COMMITS --body true
 ```
-
-`sign_commits` は commit を作成する以下の workflow で指定できます。
-
-- `initialize.yaml`
-- `create-draft.yaml`
-- `pull-draft.yaml`
-- `pull.yaml`
-- `push-draft.yaml`
-- `push-published-entries.yaml`
-- `push-when-publishing-from-draft.yaml`
 
 ### GITHUB_TOKEN 以外のトークンで commit する
 
@@ -59,7 +42,14 @@ jobs:
 
 - トークンには、対象リポジトリの Contents と Pull requests の書き込み権限が必要です
 - `GITHUB_TOKEN` と異なり、このトークンで作成した commit や Pull Request は他の workflow を起動します
-- 指定できる workflow は `sign_commits` と同じです
+- `COMMIT_TOKEN` は commit を作成する以下の workflow で指定できます
+  - `initialize.yaml`
+  - `create-draft.yaml`
+  - `pull-draft.yaml`
+  - `pull.yaml`
+  - `push-draft.yaml`
+  - `push-published-entries.yaml`
+  - `push-when-publishing-from-draft.yaml`
 
 ## Workflows
 

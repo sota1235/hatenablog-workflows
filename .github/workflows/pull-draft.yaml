@@ -16,10 +16,6 @@ on:
         required: false
         default: ubuntu-latest
         type: string
-      sign_commits:
-        required: false
-        default: false
-        type: boolean
     secrets:
       OWNER_API_KEY:
         required: true
@@ -74,5 +70,5 @@ jobs:
           BLOG_DOMAIN: ${{ steps.set-domain.outputs.BLOG_DOMAIN }}
           ENTRY_PATH: ${{ steps.set-entry-path.outputs.ENTRY_PATH }}
           working_directory: ${{ steps.working-directory.outputs.working_directory }}
-          sign_commits: ${{ inputs.sign_commits }}
+          sign_commits: ${{ vars.HATENABLOG_WORKFLOWS_SIGN_COMMITS == 'true' }}
           token: ${{ secrets.COMMIT_TOKEN || github.token }}

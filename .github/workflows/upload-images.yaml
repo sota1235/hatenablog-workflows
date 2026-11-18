@@ -7,10 +7,6 @@ on:
         required: false
         default: ubuntu-latest
         type: string
-      sign_commits:
-        required: false
-        default: false
-        type: boolean
     secrets:
       OWNER_API_KEY:
         required: true
@@ -111,6 +107,6 @@ jobs:
           echo "REVISION=$revision" >> $GITHUB_OUTPUT
         working-directory: ${{ steps.working-directory.outputs.working_directory }}
         env:
-          SIGN_COMMITS: ${{ inputs.sign_commits }}
+          SIGN_COMMITS: ${{ vars.HATENABLOG_WORKFLOWS_SIGN_COMMITS == 'true' }}
           BRANCH: ${{ github.event.pull_request.head.ref }}
           GH_TOKEN: ${{ secrets.COMMIT_TOKEN || github.token }}

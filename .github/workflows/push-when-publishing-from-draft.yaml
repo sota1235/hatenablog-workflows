@@ -10,10 +10,6 @@ on:
         required: false
         default: ubuntu-latest
         type: string
-      sign_commits:
-        required: false
-        default: false
-        type: boolean
     secrets:
       OWNER_API_KEY:
         required: true
@@ -77,7 +73,7 @@ jobs:
           body: |
             はてなブログに公開したファイルを`local_root`で指定したディレクトリに移動しました
           delete-branch: true
-          sign-commits: ${{ inputs.sign_commits }}
+          sign-commits: ${{ vars.HATENABLOG_WORKFLOWS_SIGN_COMMITS == 'true' }}
           token: ${{ secrets.COMMIT_TOKEN || github.token }}
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
