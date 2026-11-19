@@ -10,8 +10,6 @@ on:
     secrets:
       OWNER_API_KEY:
         required: true
-      COMMIT_TOKEN:
-        required: false
 
 jobs:
   upload-images:
@@ -21,4 +19,3 @@ jobs:
       runner: ${{ inputs.runner }}
     secrets:
       OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
-      COMMIT_TOKEN: ${{ secrets.COMMIT_TOKEN }}

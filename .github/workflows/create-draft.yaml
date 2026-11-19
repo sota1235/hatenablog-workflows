@@ -19,8 +19,6 @@ on:
     secrets:
       OWNER_API_KEY:
         required: true
-      COMMIT_TOKEN:
-        required: false
 
 jobs:
   post_draft_and_pull_from_hatenablog:
@@ -67,4 +65,3 @@ jobs:
           ENTRY_PATH: ${{ steps.post-draft.outputs.ENTRY_PATH }}
           working_directory: ${{ steps.working-directory.outputs.working_directory }}
           sign_commits: ${{ vars.HATENABLOG_WORKFLOWS_SIGN_COMMITS == 'true' }}
-          token: ${{ secrets.COMMIT_TOKEN || github.token }}

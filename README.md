@@ -25,32 +25,6 @@ workflow が作成する commit は、デフォルトでは署名されません
 gh variable set HATENABLOG_WORKFLOWS_SIGN_COMMITS --body true
 ```
 
-### GITHUB_TOKEN 以外のトークンで commit する
-
-workflow が commit や Pull Request を作成するときは、デフォルトでは `GITHUB_TOKEN` を使います。`COMMIT_TOKEN` にトークンを指定すると、代わりにそのトークンを使います。
-
-```yaml
-jobs:
-  pull:
-    uses: hatena/hatenablog-workflows/.github/workflows/pull.yaml@v2
-    with:
-      BLOG_DOMAIN: ${{ vars.BLOG_DOMAIN }}
-    secrets:
-      OWNER_API_KEY: ${{ secrets.OWNER_API_KEY }}
-      COMMIT_TOKEN: ${{ secrets.COMMIT_TOKEN }}
-```
-
-- トークンには、対象リポジトリの Contents と Pull requests の書き込み権限が必要です
-- `GITHUB_TOKEN` と異なり、このトークンで作成した commit や Pull Request は他の workflow を起動します
-- `COMMIT_TOKEN` は commit を作成する以下の workflow で指定できます
-  - `initialize.yaml`
-  - `create-draft.yaml`
-  - `pull-draft.yaml`
-  - `pull.yaml`
-  - `push-draft.yaml`
-  - `push-published-entries.yaml`
-  - `push-when-publishing-from-draft.yaml`
-
 ## Workflows
 
 ### `initialize.yaml`

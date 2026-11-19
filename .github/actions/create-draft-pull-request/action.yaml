@@ -15,9 +15,6 @@ inputs:
   sign_commits:
     required: false
     default: "false"
-  token:
-    required: false
-    default: ${{ github.token }}
 
 runs:
   using: "composite"
@@ -103,4 +100,3 @@ runs:
         delete-branch: true
         draft: ${{ inputs.draft == 'true' }}
         sign-commits: ${{ inputs.sign_commits == 'true' }}
-        token: ${{ inputs.token }}

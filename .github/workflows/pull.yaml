@@ -13,8 +13,6 @@ on:
     secrets:
       OWNER_API_KEY:
         required: true
-      COMMIT_TOKEN:
-        required: false
 
 jobs:
   pull:
@@ -60,4 +58,3 @@ jobs:
             skip-push
           delete-branch: true
           sign-commits: ${{ vars.HATENABLOG_WORKFLOWS_SIGN_COMMITS == 'true' }}
-          token: ${{ secrets.COMMIT_TOKEN || github.token }}
