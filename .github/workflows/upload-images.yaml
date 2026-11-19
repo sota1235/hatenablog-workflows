@@ -72,29 +72,24 @@ jobs:
             fi
             # GitHub API 経由で commit すると、GitHub によって署名された commit になる
             cd "$(git rev-parse --show-toplevel)"
-            additions=$(git diff --cached --name-only -z --diff-filter=d | while IFS= read -r -d '' file; do
-              jq -n --arg path "$file" --rawfile contents <(base64 -w0 "$file") '{path: $path, contents: $contents}'
-            done | jq -s .)
-            deletions=$(git diff --cached --name-only -z --diff-filter=D | while IFS= read -r -d '' file; do
-              jq -n --arg path "$file" '{path: $path}'
-            done | jq -s .)
-            revision=$(jq -n \
-              --arg repository "$GITHUB_REPOSITORY" \
-              --arg branch "$BRANCH" \
-              --arg head "$(git rev-parse HEAD)" \
-              --argjson additions "$additions" \
-              --argjson deletions "$deletions" \
-              '{
-                query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
-                variables: {
-                  input: {
-                    branch: {repositoryNameWithOwner: $repository, branchName: $branch},
-                    expectedHeadOid: $head,
-                    message: {headline: "upload images to fotolife"},
-                    fileChanges: {additions: $additions, deletions: $deletions}
+            revision=$(git diff --cached --name-only -z \
+              | xargs -0 -I{} jq -n --arg path {} --rawfile contents {} '{path: $path, contents: ($contents | @base64)}' \
+              | jq -s \
+                --arg repository "$GITHUB_REPOSITORY" \
+                --arg branch "$BRANCH" \
+                --arg head "$(git rev-parse HEAD)" \
+                '{
+                  query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+                  variables: {
+                    input: {
+                      branch: {repositoryNameWithOwner: $repository, branchName: $branch},
+                      expectedHeadOid: $head,
+                      message: {headline: "upload images to fotolife"},
+                      fileChanges: {additions: .}
+                    }
                   }
-                }
-              }' | gh api graphql --input - --jq '.data.createCommitOnBranch.commit.oid')
+                }' \
+              | gh api graphql --input - --jq '.data.createCommitOnBranch.commit.oid')
           else
             git commit -m "upload images to fotolife"
             git push
