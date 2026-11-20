@@ -71,6 +71,7 @@ jobs:
               exit 0
             fi
             # GitHub API 経由で commit すると、GitHub によって署名された commit になる
+            set -o pipefail
             cd "$(git rev-parse --show-toplevel)"
             revision=$(git diff --cached --name-only -z \
               | xargs -0 -I{} jq -n --arg path {} --rawfile contents {} '{path: $path, contents: ($contents | @base64)}' \
