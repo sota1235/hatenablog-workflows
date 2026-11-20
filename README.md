@@ -21,6 +21,8 @@ git mv blogsync.yaml draft.template entries draft_entries blog/
 
 workflow が作成する commit は、デフォルトでは署名されません。呼び出し元リポジトリの variable `HATENABLOG_WORKFLOWS_SIGN_COMMITS` に `true` を設定すると、GitHub API 経由で commit を作成し、GitHub によって署名された commit になります。呼び出し部分の workflow を変更する必要はありませんが、この機能に対応したバージョンの hatenablog-workflows を参照している必要があります。
 
+gh コマンドを利用しての設定例は以下です。
+
 ```console
 gh variable set HATENABLOG_WORKFLOWS_SIGN_COMMITS --body true
 ```
